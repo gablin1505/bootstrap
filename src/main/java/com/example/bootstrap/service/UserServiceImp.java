@@ -4,7 +4,6 @@ import com.example.bootstrap.models.Role;
 import com.example.bootstrap.models.User;
 import com.example.bootstrap.repositories.RoleRepository;
 import com.example.bootstrap.repositories.UserRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,7 +11,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import javax.persistence.EntityNotFoundException;
 import java.util.HashSet;
@@ -53,19 +51,19 @@ public class UserServiceImp implements UserService, UserDetailsService {
 
     @Transactional
     @Override
-    public void addNewUser(User user) {
+    public User addNewUser(User user) {
         Set<Role> roles = new HashSet<>();
         for (Role role : user.getRole()) {
             roles.add(roleRepository.findById(role.getId()).get());
         }
         user.setRole(roles);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     @Transactional
     @Override
-    public void edit(User user) {
+    public User edit(User user) {
         if (user == null) {
             throw new EntityNotFoundException("User not found");
         }
@@ -75,8 +73,9 @@ public class UserServiceImp implements UserService, UserDetailsService {
         if (!user.getPassword().equals(currentPassword)) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
-        userRepository.save(user);
+        return userRepository.save(user);
     }
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<User> person = userRepository.findByEmail(email);

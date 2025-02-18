@@ -4,10 +4,8 @@ import com.example.bootstrap.models.Role;
 import com.example.bootstrap.models.User;
 import com.example.bootstrap.service.RoleService;
 import com.example.bootstrap.service.UserService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 
 import javax.annotation.PostConstruct;
 import java.util.HashSet;
