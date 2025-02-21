@@ -42,7 +42,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
 
     @Override
     public User getUser(long id) {
-        return userRepository.getById(id);
+        return userRepository.getById((long) id);
     }
 
     @Transactional
@@ -66,22 +66,19 @@ public class UserServiceImp implements UserService, UserDetailsService {
     @Transactional
     @Override
     public void edit(User user) {
-        if (user == null) {
-            throw new EntityNotFoundException("User not found");
-        }
-        //Это нужно, чтоб пароль не хэшировался каждый раз, когда редактируем юзера
-        //Проверяет, если пароль совпадает с текущим - сохраняет, если нет - шифрует
-        var currentPassword = userRepository.findById(user.getId()).get().getPassword();
-        if (!user.getPassword().equals(currentPassword)) {
+        User savedUser = userRepository.getById(user.getId());
+        if (!savedUser.getPassword().equals(user.getPassword())) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
         userRepository.save(user);
     }
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<User> person = userRepository.findByEmail(email);
-        if (person.isEmpty())
+       Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isEmpty())
             throw new UsernameNotFoundException("User not found");
-        return person.get();
+        return optionalUser.get();
+
     }
 }

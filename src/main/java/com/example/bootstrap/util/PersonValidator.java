@@ -31,7 +31,7 @@ public class PersonValidator implements Validator {
         User person = (User) target;
 
         try {
-            userDetailsServiceImp.loadUserByUsername(person.getEmail());
+            userDetailsServiceImp.loadUserByUsername(person.getUsername());
 
         } catch (UsernameNotFoundException ignored) {
             return;

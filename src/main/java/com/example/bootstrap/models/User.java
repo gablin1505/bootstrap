@@ -1,6 +1,7 @@
 package com.example.bootstrap.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,13 +19,14 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     //    @Column(name = "name")
     @NotEmpty(message = "Name should not be empty")
-    private String name;
+    private String username;
 
     private String lastname;
 
@@ -46,8 +48,8 @@ public class User implements UserDetails {
     )
     private Set<Role> role = new HashSet<>();
 
-    public User(String name, String lastname, Long age, String email, String password, Set<Role> role) {
-        this.name = name;
+    public User(String username, String lastname, Long age, String email, String password, Set<Role> role) {
+        this.username = username;
         this.lastname = lastname;
         this.age = age;
         this.email = email;
@@ -68,11 +70,11 @@ public class User implements UserDetails {
     }
 
     public String getName() {
-        return name;
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String username) {
+        this.username = username;
     }
 
     public String getLastname() {
@@ -152,18 +154,18 @@ public class User implements UserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(name, user.name) && Objects.equals(lastname, user.lastname) && Objects.equals(age, user.age) && Objects.equals(email, user.email) && Objects.equals(password, user.password);
+        return Objects.equals(username, user.username) && Objects.equals(lastname, user.lastname) && Objects.equals(age, user.age) && Objects.equals(email, user.email) && Objects.equals(password, user.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, lastname, age, email, password);
+        return Objects.hash(username, lastname, age, email, password);
     }
 
     @Override
     public String toString() {
         return "User{" +
-                "name='" + name + '\'' +
+                "username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", age=" + age +
