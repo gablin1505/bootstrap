@@ -4,7 +4,6 @@ import com.example.bootstrap.models.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
-
 import java.util.List;
 
 @Component

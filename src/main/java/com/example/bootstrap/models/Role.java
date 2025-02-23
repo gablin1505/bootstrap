@@ -3,7 +3,6 @@ package com.example.bootstrap.models;
 
 import org.springframework.security.core.GrantedAuthority;
 
-
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -14,14 +13,14 @@ public class Role implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String roleName;
+@Column(name = "role_name")
+    private String name;
 
     public Role() {
     }
 
-    public Role(String roleName) {
-        this.roleName = roleName;
+    public Role(String name) {
+        this.name = name;
     }
 
 
@@ -33,18 +32,18 @@ public class Role implements GrantedAuthority {
         this.id = id;
     }
 
-    public String getRoleName() {
-        return roleName;
+    public String getName() {
+        return name;
     }
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
+    public void setName(String roleName) {
+        this.name = roleName;
     }
 
 
     @Override
     public String getAuthority() {
-        return getRoleName();
+        return getName();
     }
 
     @Override
@@ -52,19 +51,19 @@ public class Role implements GrantedAuthority {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Role role = (Role) o;
-        return Objects.equals(roleName, role.roleName);
+        return Objects.equals(name, role.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(roleName);
+        return Objects.hashCode(name);
     }
 
     @Override
     public String toString() {
         return "Role{" +
                 "id=" + id +
-                ", roleName='" + roleName + '\'' +
+                ", roleName='" + name + '\'' +
                 '}';
     }
 }
