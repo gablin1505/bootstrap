@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -35,38 +36,44 @@ public class AdminController {
         this.userService = userService;
     }
 
-
-    @GetMapping("/users")
-    public String showAllUsers(@AuthenticationPrincipal User user, Model model) {
-        model.addAttribute("user", user);
-        model.addAttribute("users", userService.getAllUsers());
-        model.addAttribute("person", new User());
-        List<Role> roles = roleService.findAll();
-        model.addAttribute("allRoles", roles);
-        return "users";
-    }
-
-    @PostMapping("/addNewUser")
-    public String addNewUser(@ModelAttribute("person") @Valid User user, BindingResult bindingResult) {
-        personValidator.validate(user, bindingResult);
-        if (bindingResult.hasErrors()) {
-            return "users";
-        }
-        userService.addNewUser(user);
-        return "redirect:/admin/users";
-    }
-
-    @PostMapping("/edit")
-    public String editUser(@ModelAttribute("showUser") @Valid User user) {
-        userService.edit(user);
-        return "redirect:/admin/users";
-    }
-
-
-    @PostMapping("/delete")
-    public String deleteUserId(@ModelAttribute("showUser") User user) {
-        userService.deleteUser(user.getId());
-        return "redirect:/admin/users";
-    }
+//
+//    @GetMapping("/users")
+//    public String showAllUsers(@AuthenticationPrincipal User user, Model model) {
+//        model.addAttribute("user", user);
+//        model.addAttribute("users", userService.getAllUsers());
+//        model.addAttribute("person", new User());
+//        List<Role> roles = roleService.findAll();
+//        model.addAttribute("allRoles", roles);
+//        return "users";
+//    }
+//
+//    @PostMapping("/addNewUser")
+//    public String addNewUser(@ModelAttribute("person") @Valid User user, BindingResult bindingResult) {
+//        personValidator.validate(user, bindingResult);
+//        if (bindingResult.hasErrors()) {
+//            return "users";
+//        }
+//        userService.addNewUser(user);
+//        return "redirect:/admin/users";
+//    }
+//
+//    @PostMapping("/edit")
+//    public String editUser(@ModelAttribute("showUser") @Valid User user) {
+//        userService.edit(user);
+//        return "redirect:/admin/users";
+//    }
+//
+//
+//    @PostMapping("/delete")
+//    public String deleteUserId(@ModelAttribute("showUser") User user) {
+//        userService.deleteUser(user.getId());
+//        return "redirect:/admin/users";
+//    }
+@GetMapping("/users")
+public String showAdminPage(Principal principal, Model model) {
+    User user = (User) userService.loadUserByUsername(principal.getName());
+    model.addAttribute("user", user);
+    return "users";
+}
 
 }
